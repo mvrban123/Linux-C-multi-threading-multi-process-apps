@@ -1,0 +1,58 @@
+#include <iostream>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+using namespace std;
+
+int a, b;
+int m = 4;
+
+void igrac_A(int sig){
+        cout << "broj sibica koji uzima igrac A: "; cin >> a;
+}
+
+void igrac_B(int sig){
+        cout << "broj sibica koji uzima igrac B: "; cin >> b;
+}
+void end_game(int sig){
+	exit(0);
+}
+
+int main(int broj_sibica, char **sibice){
+        int n = atoi(sibice[1]);
+        sigset(SIGINT, igrac_A);
+        sigset(SIGQUIT, igrac_B);
+	sigset(SIGTSTP, end_game);
+        cout << "N = " << sibice[1] << endl << "M = " << m << endl;
+        char pobjednik;
+        do{
+                do{
+                        cout << "na redu je igrac A..." << endl;
+                        pause();
+                        if(a > 0 && a <= m) n -= a;
+                        else cout << "igrac A uzeo je previse sibica..." << endl;
+                }while(a < 1 || a > m);
+
+                if(n <= 0){
+                        pobjednik = 'B';
+                        break;
+                }
+
+                cout << "ima " << n << " sibica na stolu" << endl;
+                do{
+                        cout << "na redu je igrac B..." << endl;
+                        pause();
+                        if(b > 0 && b <= m) n -= b;
+                        else cout << "igrac B uzeo je previse sibica..." << endl;
+                }while(b < 1 || b > m);
+
+                if(n == 0){
+  			pobjednik = 'A';
+                        break;
+                }
+
+                cout << "ima " << n << " sibica na stolu" << endl;
+        }while(1);
+        cout << "ima 0 sibica na stolu, a pobijedio je igrac " << pobjednik << endl;
+        return 0;
+}
